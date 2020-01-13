@@ -1,0 +1,55 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; } */
+
+
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import '~bootstrap/dist/css/bootstrap.min.css';
+@import '~ngx-toastr/toastr';
+
+body {
+  font-family: Roboto, Arial, sans-serif;
+  margin: 0;
+  background: #E9EBEE
+}
+.basic-container {
+  padding: 30px;
+}
+.version-info {
+  font-size: 8pt;
+  float: right;
+}
+
+.content {
+  padding:20px;
+  margin-top:30px;
+}
+
+table{
+    width:100%;
+    margin-top: 12px;
+}
+
+.formGroup{
+  padding: 10px;
+  box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
+  background: white;
+}
+
+.mat-stepper-horizontal, .mat-stepper-vertical {
+  display: block;
+  background: #E9EBEE;
+}
+
+/* .float-right  {
+  float: right;
+} */
+
+.margin-right-12{
+  margin-right: 12px;
+}
+
+.padding{
+  padding: 10px;
+}

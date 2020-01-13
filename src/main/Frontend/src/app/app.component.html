@@ -1,0 +1,120 @@
+<app-navbar></app-navbar>
+<mat-horizontal-stepper class="content" [linear]="isLinear" #stepper>
+  <mat-step [stepControl]="firstFormGroup">
+    <form [formGroup]="firstFormGroup" class="formGroup">
+      <ng-template matStepLabel>Schema</ng-template>
+      <div class="row">
+        <mat-form-field class="col-2">
+          <input matInput placeholder="Field Name" formControlName="fieldName" required>
+        </mat-form-field>
+        <mat-form-field class="col-2">
+          <mat-label>Data Type</mat-label>
+          <mat-select (selectionChange)="selectionChange($event)" formControlName="dataType" required>
+            <mat-option *ngFor="let item of dataTypes" [value]="item.value">
+              {{item.viewValue}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <!-- {{firstFormGroup.get(dataType).value}} -->
+        <mat-form-field *ngIf="firstFormGroup.get('dataType').value != '' && firstFormGroup.get('dataType').value == 'ALPHANUMERIC' "
+          class="col-2">
+          <input matInput type="number" placeholder="Length" formControlName="length" required>
+        </mat-form-field>
+        <div class="col-1 mat-form-field-infix">
+          <mat-checkbox placeholder="Ignore " formControlName="ignore">Ignore</mat-checkbox>
+        </div>
+        <div class="col-1 mat-form-field-infix">
+          <mat-checkbox placeholder="Required " formControlName="required">Required</mat-checkbox>
+        </div>
+        <div class="float-right mat-form-field-infix">
+          <button mat-raised-button class="float-right btn btn-primary margin-right-12" (click)="addSchema()">Add +</button>
+          <button mat-raised-button class="float-right btn btn-primary margin-right-12" (click)="resetSchemaForm()">Reset</button>
+        </div>
+      </div>
+    </form>
+
+    <div class="padding">
+    <div class="row">
+      <div class="col-6">
+        <label class="btn btn-primary">{{fileLabel}}
+          <input type="file" hidden (change)="uploadFile($event)">
+        </label>
+      </div>
+      <div class="col-6 float-right">
+        <button mat-button class="float-right btn btn-primary " (click)="goNext(stepper,0)">Next</button>
+        <button mat-button class="float-right btn btn-primary margin-right-12" (click)="download()">download</button>
+      </div>
+    </div>
+  </div>
+
+    <table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8" cdkDropList [cdkDropListData]="dataSource" (cdkDropListDropped)="dropTable($event)">
+
+      <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="fieldName">
+        <th mat-header-cell *matHeaderCellDef> fieldName </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.fieldName}}
+        </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="dataType">
+        <th mat-header-cell *matHeaderCellDef> dataType </th>
+        <td mat-cell *matCellDef="let element"> {{element.dataType}} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="length">
+        <th mat-header-cell *matHeaderCellDef> length </th>
+        <td mat-cell *matCellDef="let element"> {{element.length}} </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="isRequired">
+        <th mat-header-cell *matHeaderCellDef> isRequired </th>
+        <td mat-cell *matCellDef="let element"> {{element.isRequired}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="isIgnored">
+        <th mat-header-cell *matHeaderCellDef> isIgnored </th>
+        <td mat-cell *matCellDef="let element"> {{element.isIgnore}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" cdkDrag [cdkDragData]="row"></tr>
+    </table>
+
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup">
+    <form class="formGroup">
+      <ng-template matStepLabel>Upload Excel File</ng-template>
+      <div class="row">
+          <div class="col-6">
+            <label class="btn btn-primary">{{fileLabel2}}
+              <input type="file" hidden (click)= "reset($event)" (change)="uploadFileExcel($event)">
+            </label>
+          </div>
+          <div class="col-6 float-right">
+            <button mat-button class="float-right btn btn-primary " (click)="goNext(stepper,1)">Next</button>
+            <button mat-button matStepperPrevious class="float-right btn btn-primary margin-right-12">Back</button>
+          </div>
+        </div>
+    </form>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Done</ng-template>
+    You are now done.
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button (click)="stepper.reset()">Reset</button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>
+<div toastContainer></div>
+
+<!-- Copyright 2019 Google LLC. All Rights Reserved.
+    Use of this source code is governed by an MIT-style license that
+    can be found in the LICENSE file at http://angular.io/license -->
