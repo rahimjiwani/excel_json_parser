@@ -29,6 +29,7 @@ export class AppComponent implements OnInit {
   fileLabel2 = "Upload Excel"
   displayedColumns: string[] = ['fieldName', 'dataType', 'length', 'isRequired', 'isIgnored'];
   fileContent = null;
+  parsedJson;
 
   dataTypes = Constants.dataTypes;
 
@@ -82,7 +83,7 @@ export class AppComponent implements OnInit {
     })
   }
 
-  resetSchemaForm(){
+  resetSchemaForm() {
     this.firstFormGroup.reset();
     this.patchValue();
   }
@@ -115,7 +116,11 @@ export class AppComponent implements OnInit {
     var blob = new Blob([data], { type: "application/json" });
     filesaver.saveAs(blob, "Schema.json");
   }
-
+  downloadResponse(){
+    let data = this.parsedJson;
+    var blob = new Blob([data], { type: "application/json" });
+    filesaver.saveAs(blob, "response.json");
+  }
   uploadFile(event) {
 
     this.fileLabel = event.target.files[0].name
@@ -131,22 +136,22 @@ export class AppComponent implements OnInit {
     fileReader.readAsText(file);
   }
 
+  resetUpload() {
+
+    this.fileLabel = "Upload JSON"
+    this.schemaList = [];
+    this.dataSource = this.schemaList;
+    this.changeDetectorRef.detectChanges();
+
+
+  }
+
   uploadFileExcel(event) {
     let fileName = event.target.files[0].name
     let fileExtension = fileName.substr(fileName.lastIndexOf(".") + 1)
     if (Constants.fileFormat.indexOf(fileExtension) != -1) {
       this.fileLabel2 = event.target.files[0].name
       this.fileContent = event.target.files[0];
-
-      let data = JSON.stringify(this.schemaList)
-      var blob = new Blob([data], { type: "application/json" });
-
-      const formData = new FormData();
-      formData.append('file', this.fileContent);
-      formData.append('schema', blob)
-      this.parserService.postParse(formData).subscribe(res=> {
-        console.log("hiss")
-      });
       // this.parserService.getTest().subscribe(res=> {
       //   console.log("hiss")
       // });
@@ -160,7 +165,10 @@ export class AppComponent implements OnInit {
 
   goNext(stepper: MatStepper, index: number) {
     if ((this.schemaList.length > 0 && index == 0) || (index == 1 && this.fileContent != null)) {
-      stepper._steps.toArray()[index].stepControl.status = "valid"
+      debugger;
+      // stepper._steps.toArray()[index].stepControl.status = "valid"
+      stepper.next();
+      this.parsedJson=""
     } else {
       let errorMsg = '';
       if (index == 0) {
@@ -170,11 +178,39 @@ export class AppComponent implements OnInit {
       }
       this.showError(errorMsg);
     }
-    stepper.next();
+    
 
   }
 
-  reset(event){
+  parseSubmit() {
+    if (this.fileContent != null && this.fileContent != undefined && this.fileContent != '') {
+      let data = JSON.stringify(this.schemaList)
+      var blob = new Blob([data], { type: "application/json" });
+
+      const formData = new FormData();
+      formData.append('file', this.fileContent);
+      formData.append('schema', blob)
+      this.parserService.postParse(formData).subscribe(res => {
+        if(res.errors != null && res.errors.length >0){
+          this.parsedJson = JSON.stringify(res.errors, null, "    ").trim()
+        }else{
+          let data = JSON.stringify(JSON.parse(res.parsedJson), null, "    ")
+          this.parsedJson = data
+        }
+      });
+    } else {
+      this.showError('Please upload Excel file')
+    }
+  }
+
+  //Reset excel file
+  resetExcel() {
+    this.fileContent = null;
+    this.fileLabel2 = "Upload Excel"
+  }
+
+  //to refresh input field - for file uploaded with same name
+  reset(event) {
     event.target.value = null;
   }
 

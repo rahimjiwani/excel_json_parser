@@ -10,7 +10,7 @@ export class ParserServiceService {
   constructor(private http: HttpClient) { }
 
   postParse(data) {
-    return this.http.post(environment.BASE_URL + environment.PARSER_URL, data);
+    return this.http.post<any>(environment.BASE_URL + environment.PARSER_URL, data);
   }
 
   getTest() {
