@@ -12,6 +12,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,7 +25,7 @@ import com.rahim.jiwani.parser.service.ParserService;
 public class ParserServiceImpl implements ParserService {
 
 	@Override
-	public ParserResponseDto parse(MultipartFile file, List<SchemaRequestDto> schema) throws IOException {
+	public ParserResponseDto parse(MultipartFile file, List<SchemaRequestDto> schema) throws IOException, JSONException {
 		Workbook storeWb = null;
 		storeWb = new XSSFWorkbook(file.getInputStream());	
 		Sheet storeSheet = storeWb.getSheetAt(0);

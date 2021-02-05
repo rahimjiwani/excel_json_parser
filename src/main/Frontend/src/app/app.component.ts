@@ -33,7 +33,8 @@ export class AppComponent implements OnInit {
 
   dataTypes = Constants.dataTypes;
 
-  NUMBER_PATTERN = "^[0-9]\d*$";
+  NUMBER_PATTERN = "^[0-9]*$";
+  isCompleted = false;
 
   constructor(private _formBuilder: FormBuilder,
     private toastr: ToastrService,
@@ -72,6 +73,7 @@ export class AppComponent implements OnInit {
       this.dataSource = this.schemaList;
       this.changeDetectorRef.detectChanges();
       this.table.renderRows();
+      this.isCompleted = true;
 
     }
   }
@@ -142,8 +144,7 @@ export class AppComponent implements OnInit {
     this.schemaList = [];
     this.dataSource = this.schemaList;
     this.changeDetectorRef.detectChanges();
-
-
+    this.isCompleted = false
   }
 
   uploadFileExcel(event) {
@@ -165,7 +166,6 @@ export class AppComponent implements OnInit {
 
   goNext(stepper: MatStepper, index: number) {
     if ((this.schemaList.length > 0 && index == 0) || (index == 1 && this.fileContent != null)) {
-      debugger;
       // stepper._steps.toArray()[index].stepControl.status = "valid"
       stepper.next();
       this.parsedJson=""
@@ -221,6 +221,7 @@ export class AppComponent implements OnInit {
   showError(msg) {
     this.toastr.error(msg, 'Error!');
   }
+
 }
 
 

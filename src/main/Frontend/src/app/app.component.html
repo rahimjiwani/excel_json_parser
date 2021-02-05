@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
-<mat-horizontal-stepper class="content" [linear]="isLinear" #stepper>
-  <mat-step>
+<mat-horizontal-stepper class="content"  [linear]="isLinear" #stepper>
+  <mat-step [completed]="isCompleted">
     <form [formGroup]="firstFormGroup" class="formGroup">
       <ng-template matStepLabel>Schema</ng-template>
       <div class="row">
@@ -41,7 +41,7 @@
           </label>
         </div>
         <div class="col-2">
-          <button mat-raised-button class="btn btn-primary" (click)="resetUpload()">Reset
+          <button mat-raised-button class="btn btn-primary" (click)="resetUpload()">Reset Grid
           </button>
         </div>
         <div class="col-8 float-right">
@@ -92,7 +92,7 @@
     </table>
 
   </mat-step>
-  <mat-step [stepControl]="secondFormGroup">
+  <mat-step [stepControl]="secondFormGroup"  >
     <form class="formGroup">
       <ng-template matStepLabel>Upload Excel File</ng-template>
       <div class="row">
